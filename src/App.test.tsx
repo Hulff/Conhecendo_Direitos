@@ -26,7 +26,8 @@ describe('application routes and home', () => {
     expect(credits.textContent).toContain(DEVELOPER)
     expect(document.title).toBe('Conhecendo Direitos')
     fireEvent.click(screen.getByRole('link', { name: 'Abrir modo Stand' }))
-    expect(screen.getByRole('heading', { name: 'Escolha uma área' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Gire a roleta para sortear uma situação' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Sortear situação' })).toBeTruthy()
   })
 
   it('supports direct navigation to each quiz route', () => {
@@ -44,17 +45,27 @@ describe('application routes and home', () => {
     }
   })
 
-  it('completes a stand card, saves the participant count, and returns to area selection', () => {
+  it('spins the stand roulette, draws a card, and saves the participant count', () => {
+    vi.useFakeTimers()
     window.location.hash = '#/stand'
-    render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: /Direito do Consumidor/ }))
+    const view = render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: 'Sortear situação' }))
+    const rotor = view.container.querySelector('.wheel-rotor')
+    expect(rotor).not.toBeNull()
+    if (!rotor) throw new Error('A roleta do Stand não foi renderizada.')
+    act(() => {
+      fireEvent.transitionEnd(rotor)
+      vi.advanceTimersByTime(4000)
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'OK' }))
+    act(() => vi.advanceTimersByTime(400))
     expect(screen.getByText('Direito violado?')).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: 'SIM' }))
     expect(screen.getByText(/Aprenda:/)).toBeTruthy()
     expect(screen.getByText('1', { exact: true })).toBeTruthy()
     expect(window.localStorage.getItem('conhecendo-direitos:participantes-atendidos')).toBe('1')
     fireEvent.click(screen.getByRole('button', { name: 'Próximo participante' }))
-    expect(screen.getByRole('heading', { name: 'Escolha uma área' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Gire a roleta para sortear uma situação' })).toBeTruthy()
   })
 
   it('creates a configured quiz and restores the session after remounting', () => {

@@ -2,19 +2,16 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CircleCheck, CircleHelp, Link as LinkIcon } from 'lucide-react'
 import { cards } from '@/data/cards'
-import type { Area } from '@/data/questions'
 import Brand from '@/components/Brand'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { drawStandCard, emptyUsedStandCards, type StandDeck, type UsedStandCards } from '@/lib/stand'
+import { drawStandCard, emptyUsedStandCards, type UsedStandCards } from '@/lib/stand'
+import WheelDrawer from '@/components/WheelDrawer'
+import { buildWheelSlices, spinWheel, type WheelSpinResult } from '@/lib/wheel'
+import type { Question } from '@/data/questions'
 
 const PARTICIPANTS_KEY = 'conhecendo-direitos:participantes-atendidos'
-
-const AREA_OPTIONS: readonly { value: Area; title: string; description: string }[] = [
-  { value: 'trabalho', title: 'Direito do Trabalho', description: 'Salário, jornada, férias e registro' },
-  { value: 'consumidor', title: 'Direito do Consumidor', description: 'Compras, cobranças, ofertas e produtos' },
-]
 
 function readParticipantCount(): number {
   try {
@@ -28,23 +25,41 @@ function readParticipantCount(): number {
 export default function Stand() {
   const [usedIds, setUsedIds] = useState<UsedStandCards>(emptyUsedStandCards)
   const [activeCard, setActiveCard] = useState<(typeof cards)[number] | null>(null)
-  const [selection, setSelection] = useState<StandDeck | null>(null)
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null)
   const [revealed, setRevealed] = useState(false)
   const [participants, setParticipants] = useState(readParticipantCount)
   const [drawError, setDrawError] = useState('')
+  const [wheelResult, setWheelResult] = useState<WheelSpinResult | null>(null)
 
-  function chooseCard(nextSelection: StandDeck) {
-    const result = drawStandCard({
-      cards,
-      selection: nextSelection,
-      usedIds,
-      seed: Math.floor(Math.random() * 2 ** 32),
-    })
-    setSelection(nextSelection)
-    setUsedIds(result.usedIds)
-    setActiveCard(result.card)
-    setDrawError(result.card ? '' : 'Não há cartas disponíveis nesta área.')
+  const wheelSlices = buildWheelSlices('todas')
+  const remainingCards = cards.filter((card) => !usedIds.surpresa.includes(card.id))
+  const wheelCards: Question[] = remainingCards.map((card, index) => ({
+    id: card.id,
+    area: card.area,
+    level: wheelSlices.filter((slice) => slice.area === card.area)[index % 3]?.level ?? 'facil',
+    text: card.situation,
+    options: ['', '', ''],
+    answer: 'A',
+    basis: card.learn,
+    points: 0,
+  }))
+
+  function spinStandWheel() {
+    const result = spinWheel({ slices: wheelSlices, remaining: wheelCards })
+    if (!result) {
+      setDrawError('Não há cartas disponíveis para sortear.')
+      return
+    }
+    setDrawError('')
+    setWheelResult(result)
+  }
+
+  function finishStandWheel(result: WheelSpinResult) {
+    const drawn = drawStandCard({ cards, selection: result.area, usedIds, seed: Math.floor(Math.random() * 2 ** 32) })
+    setWheelResult(null)
+    setActiveCard(drawn.card)
+    setUsedIds(drawn.card ? { ...drawn.usedIds, surpresa: [...usedIds.surpresa, drawn.card.id] } : drawn.usedIds)
+    setDrawError(drawn.card ? '' : 'Não há cartas disponíveis para sortear.')
     setSelectedAnswer(null)
     setRevealed(false)
   }
@@ -66,7 +81,6 @@ export default function Stand() {
 
   function nextParticipant() {
     setActiveCard(null)
-    setSelection(null)
     setSelectedAnswer(null)
     setRevealed(false)
   }
@@ -96,16 +110,10 @@ export default function Stand() {
 
       {!activeCard ? (
         <div className="stand-choose">
-          <h2>Escolha uma área</h2>
+          <h2>Gire a roleta para sortear uma situação</h2>
           <div className="stand-area-options">
-            {AREA_OPTIONS.map((option) => (
-              <Button key={option.value} type="button" variant="secondary" className="stand-area-button" onClick={() => chooseCard(option.value)}>
-                <strong>{option.title}</strong>
-                <span>{option.description}</span>
-              </Button>
-            ))}
-            <Button type="button" variant="outline" size="lg" className="stand-surprise-button" onClick={() => chooseCard('surpresa')}>
-              Surpresa
+            <Button type="button" size="lg" className="stand-surprise-button" onClick={spinStandWheel}>
+              Sortear situação
             </Button>
           </div>
           {drawError && <p className="stand-empty-state" role="status">{drawError}</p>}
@@ -114,7 +122,7 @@ export default function Stand() {
         <div className="stand-round">
           <div className="stand-card-meta">
             <Badge variant="outline">{activeCard.tag ?? (activeCard.area === 'trabalho' ? 'Direito do Trabalho' : 'Direito do Consumidor')}</Badge>
-            {selection === 'surpresa' && <span className="stand-surprise-label">Carta surpresa</span>}
+            <span className="stand-surprise-label">Sorteio aleatório</span>
           </div>
           <Card className="stand-situation-card">
             <CardHeader className="stand-situation-header">
@@ -157,6 +165,14 @@ export default function Stand() {
           <Link to="/">Voltar ao início</Link>
         </Button>
       </footer>
+      <WheelDrawer
+        open={wheelResult !== null}
+        slices={wheelSlices}
+        remaining={wheelCards}
+        result={wheelResult}
+        onFinished={finishStandWheel}
+        standMode
+      />
     </section>
   )
 }

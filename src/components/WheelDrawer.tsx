@@ -10,6 +10,7 @@ interface WheelDrawerProps {
   remaining: readonly Question[]
   result: WheelSpinResult | null
   onFinished: (result: WheelSpinResult) => void
+  standMode?: boolean
 }
 
 type DrawerPhase = 'spinning' | 'result' | 'closing'
@@ -44,7 +45,7 @@ function sliceLabelPosition(slice: WheelSlice): { x: number; y: number } {
   return pointAt((slice.startAngle + slice.endAngle) / 2, 116)
 }
 
-export default function WheelDrawer({ open, slices, remaining, result, onFinished }: WheelDrawerProps) {
+export default function WheelDrawer({ open, slices, remaining, result, onFinished, standMode = false }: WheelDrawerProps) {
   const wheelRef = useRef<SVGGElement>(null)
   const onFinishedRef = useRef(onFinished)
   const exitTimerRef = useRef(0)
@@ -108,7 +109,7 @@ export default function WheelDrawer({ open, slices, remaining, result, onFinishe
   const counts = slices.map((slice) => remaining.filter((question) => question.level === slice.level && question.area === slice.area).length)
   const selected = result && phase !== 'spinning' ? result.sliceIndex : -1
   const resultLabel = result && phase !== 'spinning'
-    ? `Nível ${LEVEL_LABELS[result.level]} · ${AREA_LABELS[result.area]}`
+    ? standMode ? `Área sorteada · ${AREA_LABELS[result.area]}` : `Nível ${LEVEL_LABELS[result.level]} · ${AREA_LABELS[result.area]}`
     : 'A roleta está girando.'
 
   return (
@@ -124,7 +125,7 @@ export default function WheelDrawer({ open, slices, remaining, result, onFinishe
         <div className="wheel-drawer-handle" aria-hidden="true" />
         <header className="wheel-drawer-header">
           <DrawerTitle id="wheel-drawer-title">Roleta de sorteio</DrawerTitle>
-          <DrawerDescription id="wheel-drawer-description">Gire para sortear o nível e a área da próxima pergunta.</DrawerDescription>
+          <DrawerDescription id="wheel-drawer-description">{standMode ? 'Gire para sortear entre Trabalho e Consumidor.' : 'Gire para sortear o nível e a área da próxima pergunta.'}</DrawerDescription>
         </header>
         <div className="wheel-live-result" role="status" aria-live="polite">{resultLabel}</div>
         <svg
@@ -156,7 +157,7 @@ export default function WheelDrawer({ open, slices, remaining, result, onFinishe
                     {slice.area === 'trabalho' ? 'Trabalho' : 'Consumidor'}
                   </text>
                   <text x={label.x} y={label.y + 16} fill={color.text} textAnchor="middle" className="wheel-label-level">
-                    {LEVEL_LABELS[slice.level]}
+                    {standMode ? 'ALEATÓRIO' : LEVEL_LABELS[slice.level]}
                   </text>
                 </g>
               )
