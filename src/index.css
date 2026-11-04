@@ -207,7 +207,7 @@ html.projection-mode { font-size: 125%; }
 .quiz-team-awards { display: grid; gap: 0.5rem; }
 .quiz-team-awards h2 { margin: 0; font-size: 1rem; }
 .quiz-team-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.quiz-navigation { display: flex; justify-content: space-between; gap: 0.75rem; margin-top: 0.25rem; }
+.quiz-navigation { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem; margin-top: 0.25rem; }
 .quiz-navigation button { min-width: 7.5rem; }
 .quiz-result-page { display: grid; width: min(100%, 42rem); margin-inline: auto; }
 .quiz-result-header { text-align: center; }
@@ -264,13 +264,15 @@ html.projection-mode { font-size: 125%; }
 .drawer-title { margin: 0; font-size: clamp(1.25rem, 4vw, 1.75rem); font-weight: 800; }
 .drawer-description { margin: 0; color: hsl(var(--muted-foreground)); }
 .wheel-live-result { min-height: 2.75rem; display: grid; place-items: center; text-align: center; font-size: clamp(1rem, 4vw, 1.25rem); font-weight: 800; }
-.wheel-svg { display: block; width: min(78vw, 27rem); max-height: 55dvh; overflow: visible; transform-origin: center center; }
+.wheel-svg { display: block; width: min(92vw, 34rem); max-height: 68dvh; overflow: visible; transform-origin: center center; }
 .wheel-rotor { transform-box: view-box; transform-origin: 200px 210px; }
 .wheel-svg-spinning .wheel-rotor { transition: transform 3500ms cubic-bezier(0.12, 0.78, 0.14, 1); }
 .wheel-label-area { font-size: 15px; font-weight: 800; paint-order: stroke; stroke: rgb(0 0 0 / 0.16); stroke-width: 1px; }
 .wheel-label-level { font-size: 12px; font-weight: 900; letter-spacing: 0.04em; }
 .wheel-hub-brand { font-size: 7px; font-weight: 900; letter-spacing: 0.02em; }
 .wheel-hub-brand-bottom { font-size: 9px; }
+.wheel-control-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+.wheel-hint { text-align: center; }
 @keyframes wheel-drawer-enter {
   from { transform: translate(-50%, 105%); }
   to { transform: translate(-50%, 0); }

@@ -31,8 +31,8 @@ describe('spinWheel', () => {
     const pointerAngle = ((360 - (result.finalRotation % 360)) % 360)
     expect(pointerAngle).toBeGreaterThanOrEqual(slice.startAngle)
     expect(pointerAngle).toBeLessThanOrEqual(slice.endAngle)
-    expect(Math.floor(result.finalRotation / 360)).toBeGreaterThanOrEqual(5)
-    expect(Math.floor(result.finalRotation / 360)).toBeLessThanOrEqual(8)
+    expect(Math.floor(result.finalRotation / 360)).toBeGreaterThanOrEqual(7)
+    expect(Math.floor(result.finalRotation / 360)).toBeLessThanOrEqual(13)
   })
 
   it('returns null when every slice is exhausted', () => {

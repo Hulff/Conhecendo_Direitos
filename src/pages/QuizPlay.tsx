@@ -18,6 +18,7 @@ const AREA_LABELS = { consumidor: 'Consumidor', trabalho: 'Trabalho' } as const
 const LEVEL_LABELS = { facil: 'Fácil', medio: 'Médio', dificil: 'Difícil' } as const
 
 function randomSeed(): number {
+  if (globalThis.crypto?.getRandomValues) return globalThis.crypto.getRandomValues(new Uint32Array(1))[0]
   return Math.floor(Math.random() * 2 ** 32)
 }
 
@@ -93,6 +94,11 @@ export default function QuizPlay() {
       return
     }
     dispatch({ type: 'complete-wheel-spin', questionId: draw.question.id })
+  }
+
+  function backToMenu() {
+    dispatch({ type: 'clear' })
+    navigate('/')
   }
 
   return (
@@ -196,9 +202,12 @@ export default function QuizPlay() {
             </div>
           ) : (
             !isParticipant && (
+              <>
               <Button type="button" size="lg" className="quiz-reveal-button" onClick={() => dispatch({ type: 'reveal-answer', questionId: question.id })}>
                 Revelar resposta
               </Button>
+              {isRoulette && <p className="wheel-hint">Revele a resposta antes de sortear a próxima pergunta.</p>}
+              </>
             )
           )}
         </>
@@ -218,15 +227,18 @@ export default function QuizPlay() {
             type="button"
             size="lg"
             className="wheel-spin-button"
-            aria-disabled={!canSpin && !rouletteComplete}
+            disabled={!canSpin && !rouletteComplete}
             onClick={spinNextQuestion}
           >
             {rouletteComplete ? 'Ver resultado' : 'Girar a roleta'}
           </Button>
-          {question && !progress.revealed && !isParticipant && <p className="wheel-hint">Revele a resposta antes de sortear a próxima pergunta.</p>}
+          <Button type="button" size="lg" variant="outline" onClick={backToMenu}>Voltar ao menu</Button>
         </div>
       ) : (
         <nav className="quiz-navigation" aria-label="Navegação da rodada">
+          <Button type="button" size="lg" variant="outline" onClick={backToMenu}>
+            Voltar ao menu
+          </Button>
           <Button
             type="button"
             variant="outline"
@@ -235,7 +247,7 @@ export default function QuizPlay() {
           >
             Anterior
           </Button>
-          <Button type="button" onClick={nextQuestion}>
+          <Button type="button" onClick={nextQuestion} disabled={!progress.revealed}>
             {currentIndex === round.length - 1 ? 'Ver resultado' : 'Próxima'}
           </Button>
         </nav>

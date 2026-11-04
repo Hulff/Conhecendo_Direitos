@@ -40,6 +40,11 @@ function seededRandom(seed: number): () => number {
   }
 }
 
+function secureRandomSeed(): number {
+  if (globalThis.crypto?.getRandomValues) return globalThis.crypto.getRandomValues(new Uint32Array(1))[0]
+  return Math.floor(Math.random() * 2 ** 32)
+}
+
 function normalizeAngle(angle: number): number {
   return ((angle % 360) + 360) % 360
 }
@@ -55,7 +60,7 @@ export function buildWheelSlices(area: QuizArea): WheelSlice[] {
   }))
 }
 
-export function spinWheel({ slices, remaining, seed = 0 }: SpinWheelOptions): WheelSpinResult | null {
+export function spinWheel({ slices, remaining, seed = secureRandomSeed() }: SpinWheelOptions): WheelSpinResult | null {
   const eligible = slices.flatMap((slice, sliceIndex) => (
     remaining.some((question) => question.level === slice.level && question.area === slice.area)
       ? [{ slice, sliceIndex }]
@@ -70,7 +75,7 @@ export function spinWheel({ slices, remaining, seed = 0 }: SpinWheelOptions): Wh
   const deviation = (random() - 0.5) * sliceWidth * 0.6
   const pointerAngle = normalizeAngle(centerAngle + deviation)
   const alignmentAngle = normalizeAngle(360 - pointerAngle)
-  const fullTurns = 5 + Math.floor(random() * 4)
+  const fullTurns = 7 + Math.floor(random() * 7)
 
   return {
     sliceIndex: selected.sliceIndex,

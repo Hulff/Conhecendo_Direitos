@@ -100,6 +100,10 @@ describe('application routes and home', () => {
       vi.advanceTimersByTime(5200)
     })
 
+    expect(screen.getByRole('button', { name: 'OK' })).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'OK' }))
+    act(() => vi.advanceTimersByTime(350))
+
     expect(screen.getByRole('progressbar', { name: 'Progresso da rodada: 1 de 5' })).toBeTruthy()
     const saved = window.sessionStorage.getItem('conhecendo-direitos:quiz-session')
     expect(saved).not.toBeNull()
@@ -129,6 +133,7 @@ describe('application routes and home', () => {
 
     for (let index = 0; index < 8; index += 1) {
       fireEvent.click(screen.getByRole('button', { name: 'Próxima' }))
+      fireEvent.click(screen.getByRole('button', { name: 'Revelar resposta' }))
     }
     fireEvent.click(screen.getByRole('button', { name: 'Ver resultado' }))
     expect(screen.getByRole('heading', { name: 'Rodada concluída' })).toBeTruthy()
@@ -151,6 +156,7 @@ describe('application routes and home', () => {
     expect(screen.getByText(/Fundamento legal:/)).toBeTruthy()
     for (let index = 0; index < 8; index += 1) {
       fireEvent.click(screen.getByRole('button', { name: 'Próxima' }))
+      fireEvent.click(screen.getByRole('button', { name: /^A / }))
     }
     fireEvent.click(screen.getByRole('button', { name: 'Ver resultado' }))
     expect(screen.getByText('Sua pontuação')).toBeTruthy()
