@@ -204,6 +204,8 @@ html.projection-mode { font-size: 125%; }
 .quiz-answer-status-incorrect svg { color: hsl(var(--wrong)); }
 .quiz-basis-card > div { padding: 1rem 1.25rem; }
 .quiz-basis-card p { margin: 0; line-height: 1.5; }
+.quiz-question-source a { display: inline-flex; align-items: center; gap: 0.3rem; }
+.stand-source a { display: inline-flex; align-items: center; gap: 0.3rem; }
 .quiz-team-awards { display: grid; gap: 0.5rem; }
 .quiz-team-awards h2 { margin: 0; font-size: 1rem; }
 .quiz-team-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }

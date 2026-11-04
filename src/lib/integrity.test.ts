@@ -6,6 +6,7 @@ import { countQuestionsByAreaAndLevel, validateCards, validateQuestions } from '
 describe('real content integrity', () => {
   it('has 60 unique valid questions, evenly split by area and level', () => {
     expect(validateQuestions(questions)).toEqual([])
+    expect(questions.every((question) => question.source?.label.trim() && question.source.url.startsWith('https://'))).toBe(true)
     expect(questions).toHaveLength(60)
     expect(countQuestionsByAreaAndLevel(questions)).toEqual({
       consumidor: { facil: 10, medio: 10, dificil: 10 },
@@ -15,6 +16,7 @@ describe('real content integrity', () => {
 
   it('has six unique valid stand cards', () => {
     expect(validateCards(cards)).toEqual([])
+    expect(cards.every((card) => card.source.label.trim() && card.source.url.startsWith('https://'))).toBe(true)
     expect(cards).toHaveLength(6)
   })
 })

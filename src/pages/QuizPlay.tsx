@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { CircleCheck, CircleX } from 'lucide-react'
+import { CircleCheck, CircleX, Link as LinkIcon } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -175,7 +175,17 @@ export default function QuizPlay() {
                 </p>
               )}
               <Card className="quiz-basis-card">
-                <CardContent><p><strong>Fundamento legal:</strong> {question.basis}</p></CardContent>
+                <CardContent>
+                  <p><strong>Fundamento legal:</strong> {question.basis}</p>
+                  {question.source && (
+                    <p className="quiz-question-source">
+                      <strong>Fonte:</strong>{' '}
+                      <a href={question.source.url} target="_blank" rel="noreferrer">
+                        {question.source.label}<LinkIcon aria-hidden="true" size={14} />
+                      </a>
+                    </p>
+                  )}
+                </CardContent>
               </Card>
               {session.scoringEnabled && !isParticipant && (
                 <div className="quiz-team-awards" role="group" aria-labelledby="quiz-team-awards-title">

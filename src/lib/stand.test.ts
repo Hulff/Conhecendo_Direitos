@@ -3,9 +3,9 @@ import type { Card } from '@/data/cards'
 import { drawStandCard, emptyUsedStandCards } from './stand'
 
 const fixtureCards: Card[] = [
-  { id: 'c1', area: 'consumidor', situation: 'Situação C1', answer: true, learn: 'Explicação C1' },
-  { id: 'c2', area: 'consumidor', situation: 'Situação C2', answer: false, learn: 'Explicação C2' },
-  { id: 't1', area: 'trabalho', situation: 'Situação T1', answer: true, learn: 'Explicação T1' },
+  { id: 'c1', area: 'consumidor', situation: 'Situação C1', answer: true, learn: 'Explicação C1', source: { label: 'Fixture', url: 'https://example.com' } },
+  { id: 'c2', area: 'consumidor', situation: 'Situação C2', answer: false, learn: 'Explicação C2', source: { label: 'Fixture', url: 'https://example.com' } },
+  { id: 't1', area: 'trabalho', situation: 'Situação T1', answer: true, learn: 'Explicação T1', source: { label: 'Fixture', url: 'https://example.com' } },
 ]
 
 describe('drawStandCard', () => {

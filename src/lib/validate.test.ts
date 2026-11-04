@@ -9,6 +9,7 @@ const question: Question = {
 }
 const card: Card = {
   id: 'card1', area: 'trabalho', situation: 'Situação fixture', answer: true, learn: 'Explicação fixture',
+  source: { label: 'Fixture', url: 'https://example.com' },
 }
 
 describe('content validation and counts', () => {

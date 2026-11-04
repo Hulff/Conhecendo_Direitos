@@ -1,6 +1,7 @@
 // ============================================================
 // BANCO DE PERGUNTAS — fonte única de verdade do quiz.
-// Para editar: altere texto, alternativas, `answer` ou `basis` abaixo.
+// Para editar: altere texto, alternativas, `answer` ou `basis` abaixo e mantenha
+// a referência correspondente no mapa SOURCES.
 // Nenhum outro arquivo deve conter perguntas.
 //
 // ATENÇÃO: o gabarito do PDF original tinha erros. Itens corrigidos
@@ -13,6 +14,11 @@ export type Area = "consumidor" | "trabalho";
 export type Level = "facil" | "medio" | "dificil";
 export type Letter = "A" | "B" | "C";
 
+export interface Source {
+    label: string;
+    url: string;
+}
+
 export const POINTS: Record<Level, number> = { facil: 1, medio: 2, dificil: 3 };
 
 export interface Question {
@@ -24,9 +30,86 @@ export interface Question {
     options: [string, string, string]; // A, B, C
     answer: Letter;
     basis: string; // fundamento legal exibido ao mediador
+    source?: Source;
     corrigido?: boolean; // gabarito diferente do PDF original
 }
 
+// ============================================================
+const P = "https://www.planalto.gov.br/ccivil_03";
+const CDC = `${P}/leis/l8078compilado.htm`;
+const CLT = `${P}/decreto-lei/del5452compilado.htm`;
+const CF = `${P}/constituicao/constituicao.htm`;
+const FGTS = `${P}/leis/l8036consol.htm`;
+const STJ_SUMULAS = "https://www.stj.jus.br/docs_internet/VerbetesSTJ_asc.pdf";
+const TST_SUMULAS = "https://consultaunificada2.tst.jus.br/";
+
+const s = (label: string, url: string): Source => ({ label, url });
+
+export const SOURCES: Record<string, Source> = {
+    // ---------------- CONSUMIDOR ----------------
+    c01: s("Lei 8.078/1990 (CDC)", CDC),
+    c02: s("CDC, art. 49", `${CDC}#art49`),
+    c03: s("CDC, art. 2º", `${CDC}#art2`),
+    c04: s("Procons: reclamações e fiscalização (Gov.br)", "https://www.gov.br/anatel/pt-br/consumidor/quer-reclamar/anatel-procon-ou-juizados-especiais"),
+    c05: s("CDC, art. 39, I", `${CDC}#art39`),
+    c06: s("CDC, art. 26, II", `${CDC}#art26`),
+    c07: s("CDC, art. 37", `${CDC}#art37`),
+    c08: s("CDC, art. 31", `${CDC}#art31`),
+    c09: s("CDC, art. 42", `${CDC}#art42`),
+    c10: s("Lei 9.099/1995, art. 9º", `${P}/leis/l9099.htm#art9`),
+    c11: s("CDC, art. 12", `${CDC}#art12`),
+    c12: s("CDC, art. 6º, VIII", `${CDC}#art6`),
+    c13: s("CDC, art. 27", `${CDC}#art27`),
+    c14: s("CDC, art. 51", `${CDC}#art51`),
+    c15: s("CDC, art. 42, parágrafo único", `${CDC}#art42`),
+    c16: s("CDC, art. 26, §3º", `${CDC}#art26`),
+    c17: s("CDC, art. 18, §1º", `${CDC}#art18`),
+    c18: s("CDC, art. 40, §1º", `${CDC}#art40`),
+    c19: s("CDC, art. 43, §1º", `${CDC}#art43`),
+    c20: s("CDC, art. 54, §4º", `${CDC}#art54`),
+    c21: s("Súmula 297 do STJ", STJ_SUMULAS),
+    c22: s("Súmula 479 do STJ", STJ_SUMULAS),
+    c23: s("CDC, art. 28, §5º", `${CDC}#art28`),
+    c24: s("CDC, art. 13", `${CDC}#art13`),
+    c25: s("CDC, art. 12, §3º", `${CDC}#art12`),
+    c26: s("Súmula 385 do STJ", STJ_SUMULAS),
+    c27: s("Súmula 302 do STJ", STJ_SUMULAS),
+    c28: s("CDC, art. 17", `${CDC}#art17`),
+    c29: s("CDC, art. 18, §3º", `${CDC}#art18`),
+    c30: s("Súmula 130 do STJ", STJ_SUMULAS),
+
+    // ---------------- TRABALHO ----------------
+    t01: s("CF/1988, art. 7º, XIII", `${CF}#art7`),
+    t02: s("CLT, art. 130", `${CLT}#art130`),
+    t03: s("Lei 4.090/1962 (13º salário)", `${P}/leis/l4090.htm`),
+    t04: s("CF/1988, art. 7º, XXXIII", `${CF}#art7`),
+    t05: s("CLT, art. 29", `${CLT}#art29`),
+    t06: s("Lei 8.036/1990, art. 15", `${FGTS}#art15`),
+    t07: s("CF/1988, art. 7º, XVIII", `${CF}#art7`),
+    t08: s("CF/1988, art. 7º, XV", `${CF}#art7`),
+    t09: s("CF/1988, art. 7º, XVI", `${CF}#art7`),
+    t10: s("CLT, art. 71", `${CLT}#art71`),
+    t11: s("Lei 12.506/2011 (aviso prévio proporcional)", `${P}/_ato2011-2014/2011/lei/l12506.htm`),
+    t12: s("Lei 8.036/1990, art. 18, §1º", `${FGTS}#art18`),
+    t13: s("CF/1988, art. 7º, XXIX", `${CF}#art7`),
+    t14: s("Súmulas 172 e 376 do TST", TST_SUMULAS),
+    t15: s("CLT, art. 73", `${CLT}#art73`),
+    t16: s("CLT, art. 192", `${CLT}#art192`),
+    t17: s("ADCT, art. 10, II, b (CF/1988)", CF),
+    t18: s("CLT, art. 445, parágrafo único", `${CLT}#art445`),
+    t19: s("CLT, art. 59, §5º", `${CLT}#art59`),
+    t20: s("CLT, art. 482, a", `${CLT}#art482`),
+    t21: s("CLT, art. 58, §2º (Lei 13.467/2017)", `${CLT}#art58`),
+    t22: s("CLT, art. 71, §4º", `${CLT}#art71`),
+    t23: s("Súmula 331 do TST", TST_SUMULAS),
+    t24: s("CLT, art. 59-A", `${CLT}#art59a`),
+    t25: s("Súmula 443 do TST", TST_SUMULAS),
+    t26: s("CLT, art. 461, §1º", `${CLT}#art461`),
+    t27: s("CLT, art. 452-A, §2º", `${CLT}#art452a`),
+    t28: s("CLT, art. 790, §3º", `${CLT}#art790`),
+    t29: s("Súmula 366 do TST", TST_SUMULAS),
+    t30: s("CLT, art. 895", `${CLT}#art895`),
+};
 const q = (
     id: string,
     area: Area,
@@ -36,10 +119,14 @@ const q = (
     answer: Letter,
     basis: string,
     corrigido = false,
-): Question => ({
-    id, area, level, points: POINTS[level], text, options, answer, basis,
-    ...(corrigido ? { corrigido } : {}),
-});
+): Question => {
+    const source = SOURCES[id];
+    if (!source) throw new Error(`Fonte não cadastrada para a pergunta ${id}.`);
+    return {
+        id, area, level, points: POINTS[level], text, options, answer, basis, source,
+        ...(corrigido ? { corrigido } : {}),
+    };
+};
 
 export const questions: Question[] = [
     // ---------------- DIREITO DO CONSUMIDOR ----------------

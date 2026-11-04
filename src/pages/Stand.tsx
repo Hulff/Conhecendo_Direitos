@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CircleCheck, CircleHelp } from 'lucide-react'
+import { CircleCheck, CircleHelp, Link as LinkIcon } from 'lucide-react'
 import { cards } from '@/data/cards'
 import type { Area } from '@/data/questions'
 import Brand from '@/components/Brand'
@@ -140,6 +140,12 @@ export default function Stand() {
                 <p>{isCorrect ? 'Isso mesmo!' : 'A resposta correta é:'} <strong>{activeCard.answer ? 'SIM' : 'NÃO'}</strong></p>
               </div>
               <p className="stand-learning"><strong>Aprenda:</strong> {activeCard.learn}</p>
+              <p className="stand-source">
+                <strong>Fonte:</strong>{' '}
+                <a href={activeCard.source.url} target="_blank" rel="noreferrer">
+                  {activeCard.source.label}<LinkIcon aria-hidden="true" size={14} />
+                </a>
+              </p>
               <Button type="button" size="lg" onClick={nextParticipant}>Próximo participante</Button>
             </div>
           )}

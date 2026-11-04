@@ -28,12 +28,12 @@ O build fica na pasta `dist/`.
 
 O conteúdo fica somente nestes arquivos:
 
-- `src/data/questions.ts`: perguntas, alternativas, gabaritos, níveis e fundamentos.
-- `src/data/cards.ts`: situações, respostas e explicações do modo Stand.
+- `src/data/questions.ts`: perguntas, alternativas, gabaritos, níveis, fundamentos e fontes.
+- `src/data/cards.ts`: situações, respostas, explicações e fontes do modo Stand.
 
 Cada pergunta tem id único, área (`consumidor` ou `trabalho`), nível (`facil`, `medio` ou `dificil`), 3 alternativas, resposta (`A`, `B` ou `C`) e fundamento. A pontuação por nível é 1, 2 e 3 pontos. Cada carta tem id único, área, situação, resposta (`true` = SIM, `false` = NÃO) e explicação.
 
-Edite os registros nesses arquivos e preserve seus formatos TypeScript. Os testes verificam o conteúdo e a distribuição atual de perguntas e cartas. Itens com `corrigido: true` estão marcados para revisão jurídica humana.
+Edite os registros nesses arquivos e preserve seus formatos TypeScript. Cada pergunta e carta deve manter uma fonte oficial em `source`, com `label` e `url`; o link aparece junto à explicação após a resposta ser revelada. Atualize a referência quando alterar o conteúdo e prefira legislação oficial e jurisprudência dos tribunais. Os testes verificam o conteúdo e a distribuição atual de perguntas e cartas. Itens com `corrigido: true` estão marcados para revisão jurídica humana.
 
 ## Hospedar e usar no stand
 
