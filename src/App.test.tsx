@@ -26,8 +26,8 @@ describe('application routes and home', () => {
   it('supports direct navigation to each quiz route', () => {
     const routes = [
       ['#/quiz', 'Configurar quiz'],
-      ['#/quiz/jogar', 'Quiz'],
-      ['#/quiz/resultado', 'Resultado'],
+      ['#/quiz/jogar', 'Configurar quiz'],
+      ['#/quiz/resultado', 'Configurar quiz'],
     ] as const
 
     for (const [path, title] of routes) {
@@ -73,6 +73,48 @@ describe('application routes and home', () => {
     cleanup()
     render(<App />)
     expect(window.sessionStorage.getItem('conhecendo-direitos:quiz-session')).toBe(storedSession)
+  })
+
+  it('reveals answers, awards multiple teams, and shows the team result', () => {
+    window.location.hash = '#/quiz'
+    render(<App />)
+    fireEvent.click(screen.getByRole('switch', { name: 'Ativar pontuação por equipes' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Começar' }))
+
+    expect(screen.getByText('Questão 1 de 9')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'Revelar resposta' }))
+    expect(screen.getByText(/Gabarito:/)).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'Equipe 1 · 0 pontos' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Equipe 2 · 0 pontos' }))
+    expect(screen.getByRole('button', { name: /Equipe 1 · [1-3] ponto/ })).toBeTruthy()
+
+    for (let index = 0; index < 8; index += 1) {
+      fireEvent.click(screen.getByRole('button', { name: 'Próxima' }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Ver resultado' }))
+    expect(screen.getByRole('heading', { name: 'Rodada concluída' })).toBeTruthy()
+    expect(screen.getByText('Equipe 1')).toBeTruthy()
+    expect(screen.getByText('Equipe 2')).toBeTruthy()
+  })
+
+  it('scores participant answers and restores them after remounting', () => {
+    window.location.hash = '#/quiz'
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: 'Começar' }))
+    fireEvent.click(screen.getByRole('switch', { name: 'Modo participante' }))
+    fireEvent.click(screen.getByRole('button', { name: /^A / }))
+    expect(screen.getByText(/Fundamento legal:/)).toBeTruthy()
+    expect(screen.getByText(/Você acertou|Resposta incorreta/)).toBeTruthy()
+
+    cleanup()
+    render(<App />)
+    expect((screen.getByRole('switch', { name: 'Modo participante' }) as HTMLInputElement).checked).toBe(true)
+    expect(screen.getByText(/Fundamento legal:/)).toBeTruthy()
+    for (let index = 0; index < 8; index += 1) {
+      fireEvent.click(screen.getByRole('button', { name: 'Próxima' }))
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Ver resultado' }))
+    expect(screen.getByText('Sua pontuação')).toBeTruthy()
   })
 
   it('toggles and persists projection mode', () => {
