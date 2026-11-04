@@ -153,7 +153,9 @@ export default function Stand() {
       )}
 
       <footer className="stand-footer">
-        <Link to="/" className="stand-home-link">Voltar ao início</Link>
+        <Button asChild size="lg" variant="outline">
+          <Link to="/">Voltar ao início</Link>
+        </Button>
       </footer>
     </section>
   )

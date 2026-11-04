@@ -246,9 +246,6 @@ export default function QuizPlay() {
         </div>
       ) : (
         <nav className="quiz-navigation" aria-label="Navegação da rodada">
-          <Button type="button" size="lg" variant="outline" onClick={backToMenu}>
-            Voltar ao menu
-          </Button>
           <Button
             type="button"
             variant="outline"
@@ -256,6 +253,9 @@ export default function QuizPlay() {
             disabled={currentIndex === 0}
           >
             Anterior
+          </Button>
+          <Button type="button" size="lg" variant="outline" onClick={backToMenu}>
+            Voltar ao menu
           </Button>
           <Button type="button" onClick={nextQuestion} disabled={!progress.revealed}>
             {currentIndex === round.length - 1 ? 'Ver resultado' : 'Próxima'}
