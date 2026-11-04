@@ -8,6 +8,7 @@ const projectionKey = 'conhecendo-direitos:modo-projecao'
 afterEach(() => {
   cleanup()
   window.localStorage.clear()
+  window.sessionStorage.clear()
   document.documentElement.classList.remove('projection-mode')
   window.location.hash = '#/'
 })
@@ -48,6 +49,30 @@ describe('application routes and home', () => {
     expect(window.localStorage.getItem('conhecendo-direitos:participantes-atendidos')).toBe('1')
     fireEvent.click(screen.getByRole('button', { name: 'Próximo participante' }))
     expect(screen.getByRole('heading', { name: 'Escolha uma área' })).toBeTruthy()
+  })
+
+  it('creates a configured quiz and restores the session after remounting', () => {
+    window.location.hash = '#/quiz'
+    render(<App />)
+    fireEvent.click(screen.getByRole('radio', { name: 'Direito do Consumidor' }))
+    fireEvent.click(screen.getByRole('switch', { name: 'Ativar pontuação por equipes' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Adicionar equipe' }))
+    fireEvent.change(screen.getByLabelText('Equipe 3'), { target: { value: 'Desafios' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Começar' }))
+
+    expect(screen.getByRole('heading', { name: 'Quiz' })).toBeTruthy()
+    const storedSession = window.sessionStorage.getItem('conhecendo-direitos:quiz-session')
+    expect(storedSession).not.toBeNull()
+    if (!storedSession) throw new Error('A sessão do quiz não foi salva.')
+    const session = JSON.parse(storedSession) as { area: string; roundIds: string[]; teamNames: string[]; scoringEnabled: boolean }
+    expect(session.area).toBe('consumidor')
+    expect(session.roundIds.length).toBeGreaterThan(0)
+    expect(session.teamNames).toEqual(['Equipe 1', 'Equipe 2', 'Desafios'])
+    expect(session.scoringEnabled).toBe(true)
+
+    cleanup()
+    render(<App />)
+    expect(window.sessionStorage.getItem('conhecendo-direitos:quiz-session')).toBe(storedSession)
   })
 
   it('toggles and persists projection mode', () => {
