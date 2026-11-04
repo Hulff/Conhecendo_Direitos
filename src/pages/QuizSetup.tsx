@@ -8,7 +8,7 @@ import { Switch } from '@/components/ui/switch'
 import { questions } from '@/data/questions'
 import { useQuizSession } from '@/context/QuizSessionContext'
 import { buildFullRound, buildRound, type QuizArea } from '@/lib/quiz'
-import { summarizeRound, type QuizFormat } from '@/lib/quizSetup'
+import { summarizeRound, summarizeWheelRound, type QuizFormat } from '@/lib/quizSetup'
 
 const AREAS: readonly { value: QuizArea; label: string }[] = [
   { value: 'consumidor', label: 'Direito do Consumidor' },
@@ -25,10 +25,13 @@ export default function QuizSetup() {
   const [area, setArea] = useState<QuizArea>('todas')
   const [format, setFormat] = useState<QuizFormat>('curta')
   const [perLevel, setPerLevel] = useState(3)
+  const [wheelQuestionLimit, setWheelQuestionLimit] = useState<number | null>(5)
   const [scoringEnabled, setScoringEnabled] = useState(false)
   const [teamNames, setTeamNames] = useState<string[]>(INITIAL_TEAMS)
   const [error, setError] = useState('')
-  const summary = summarizeRound(questions, area, format, perLevel)
+  const roundSummary = summarizeRound(questions, area, format === 'completa' ? 'completa' : 'curta', perLevel)
+  const wheelSummary = summarizeWheelRound(questions, area, wheelQuestionLimit)
+  const questionCount = format === 'roleta' ? wheelSummary.questionCount : roundSummary.questionCount
 
   function changeTeam(index: number, event: ChangeEvent<HTMLInputElement>) {
     setTeamNames((current) => current.map((team, currentIndex) => currentIndex === index ? event.target.value : team))
@@ -44,7 +47,7 @@ export default function QuizSetup() {
   }
 
   function startQuiz() {
-    if (summary.questionCount === 0) {
+    if (questionCount === 0) {
       setError('Não há perguntas disponíveis para esta seleção.')
       return
     }
@@ -62,6 +65,24 @@ export default function QuizSetup() {
       }
     }
 
+    if (format === 'roleta') {
+      const remaining = questions.filter((question) => area === 'todas' || question.area === area)
+      dispatch({
+        type: 'start',
+        session: {
+          area,
+          format,
+          roundIds: [],
+          remainingIds: remaining.map((question) => question.id),
+          wheelQuestionLimit: wheelQuestionLimit === null ? null : wheelSummary.questionCount,
+          teamNames: scoringEnabled ? normalizedTeamNames : [],
+          scoringEnabled,
+        },
+      })
+      navigate('/quiz/jogar')
+      return
+    }
+
     const round = format === 'completa'
       ? buildFullRound(area)
       : buildRound({ area, levels: LEVELS, perLevel })
@@ -75,7 +96,10 @@ export default function QuizSetup() {
       type: 'start',
       session: {
         area,
+        format,
         roundIds: round.map((question) => question.id),
+        remainingIds: [],
+        wheelQuestionLimit: null,
         teamNames: scoringEnabled ? normalizedTeamNames : [],
         scoringEnabled,
       },
@@ -120,12 +144,29 @@ export default function QuizSetup() {
                 <input type="radio" name="quiz-format" value="completa" checked={format === 'completa'} onChange={() => setFormat('completa')} />
                 <span><strong>Rodada completa</strong><small>Todas as perguntas da área</small></span>
               </label>
+              <label className="quiz-choice quiz-format-choice">
+                <input type="radio" name="quiz-format" value="roleta" checked={format === 'roleta'} onChange={() => setFormat('roleta')} />
+                <span><strong>Roleta</strong><small>Sortear nível e área a cada pergunta</small></span>
+              </label>
             </div>
             {format === 'curta' && (
               <label className="quiz-per-level" htmlFor="quiz-per-level">
                 Perguntas por nível
                 <select id="quiz-per-level" value={perLevel} onChange={(event) => setPerLevel(Number(event.target.value))}>
                   {[3, 4, 5].map((count) => <option key={count} value={count}>{count} perguntas</option>)}
+                </select>
+              </label>
+            )}
+            {format === 'roleta' && (
+              <label className="quiz-per-level" htmlFor="quiz-wheel-count">
+                Perguntas na rodada
+                <select
+                  id="quiz-wheel-count"
+                  value={wheelQuestionLimit ?? 'all'}
+                  onChange={(event) => setWheelQuestionLimit(event.target.value === 'all' ? null : Number(event.target.value))}
+                >
+                  {[5, 10, 15].map((count) => <option key={count} value={count}>{count} perguntas</option>)}
+                  <option value="all">Até esgotar</option>
                 </select>
               </label>
             )}
@@ -158,16 +199,23 @@ export default function QuizSetup() {
           <div className="quiz-summary" aria-live="polite">
             <h2>Resumo da rodada</h2>
             <div className="quiz-summary-values">
-              <Badge variant="outline">{summary.questionCount} {summary.questionCount === 1 ? 'pergunta' : 'perguntas'}</Badge>
-              <Badge>Pontuação máxima: {summary.maxPoints} {summary.maxPoints === 1 ? 'ponto' : 'pontos'}</Badge>
+              <Badge variant="outline">{questionCount} {questionCount === 1 ? 'pergunta' : 'perguntas'}</Badge>
+              {format === 'roleta' ? (
+                <Badge>Pontos possíveis: {wheelSummary.minPoints}–{wheelSummary.maxPoints}</Badge>
+              ) : (
+                <Badge>Pontuação máxima: {roundSummary.maxPoints} {roundSummary.maxPoints === 1 ? 'ponto' : 'pontos'}</Badge>
+              )}
             </div>
           </div>
-          {summary.questionCount === 0 && (
+          {questionCount === 0 && (
             <p className="quiz-setup-empty" role="status">Não há perguntas disponíveis para esta seleção. Escolha outra área ou formato.</p>
           )}
           {error && <p className="quiz-setup-error" role="alert"><CircleAlert aria-hidden="true" />{error}</p>}
-          <Button type="button" size="lg" className="quiz-start-button" onClick={startQuiz} disabled={summary.questionCount === 0}>
+          <Button type="button" size="lg" className="quiz-start-button" onClick={startQuiz} disabled={questionCount === 0}>
             Começar
+          </Button>
+          <Button type="button" size="lg" variant="outline" onClick={() => navigate('/')}>
+            Voltar ao menu
           </Button>
         </CardContent>
       </Card>

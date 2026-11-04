@@ -125,3 +125,4 @@ Testes de wheel.ts verdes; pnpm lint && pnpm test && pnpm build sem erros.
 - [ ] Os dois modos funcionam em 360px e em tela de projetor.
 - [ ] `pnpm lint && pnpm test && pnpm build` sem erros.
 - [ ] Pendência humana registrada: revisão jurídica dos itens `corrigido: true`.
+- [ ] Formato Roleta: drawer sobe, gira, desce e mostra a pergunta./

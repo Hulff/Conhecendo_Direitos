@@ -1,12 +1,13 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 
 const projectionKey = 'conhecendo-direitos:modo-projecao'
 
 afterEach(() => {
   cleanup()
+  vi.useRealTimers()
   window.localStorage.clear()
   window.sessionStorage.clear()
   document.documentElement.classList.remove('projection-mode')
@@ -72,7 +73,45 @@ describe('application routes and home', () => {
 
     cleanup()
     render(<App />)
-    expect(window.sessionStorage.getItem('conhecendo-direitos:quiz-session')).toBe(storedSession)
+    const restored = window.sessionStorage.getItem('conhecendo-direitos:quiz-session')
+    expect(restored).not.toBeNull()
+    if (!restored) throw new Error('A sessão do quiz não foi restaurada.')
+    expect(JSON.parse(restored)).toEqual(session)
+  })
+
+  it('spins, draws without removing the round state, and restores the roulette question', () => {
+    vi.useFakeTimers()
+    window.location.hash = '#/quiz'
+    const view = render(<App />)
+    fireEvent.click(screen.getByRole('radio', { name: /Roleta/ }))
+    fireEvent.click(screen.getByRole('button', { name: 'Começar' }))
+    expect(screen.getByText('Primeira pergunta')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'Girar a roleta' }))
+
+    const pending = window.sessionStorage.getItem('conhecendo-direitos:quiz-session')
+    expect(pending).not.toBeNull()
+    if (!pending) throw new Error('O resultado pendente da roleta não foi salvo.')
+    expect(JSON.parse(pending)).toHaveProperty('pendingWheelResult')
+    const rotor = view.container.querySelector('.wheel-rotor')
+    expect(rotor).not.toBeNull()
+    if (!rotor) throw new Error('A roleta não foi renderizada.')
+    act(() => {
+      fireEvent.transitionEnd(rotor)
+      vi.advanceTimersByTime(5200)
+    })
+
+    expect(screen.getByRole('progressbar', { name: 'Progresso da rodada: 1 de 5' })).toBeTruthy()
+    const saved = window.sessionStorage.getItem('conhecendo-direitos:quiz-session')
+    expect(saved).not.toBeNull()
+    if (!saved) throw new Error('A pergunta sorteada não foi salva.')
+    const current = JSON.parse(saved) as { roundIds: string[]; remainingIds: string[]; pendingWheelResult: unknown }
+    expect(current.roundIds).toHaveLength(1)
+    expect(current.remainingIds).toHaveLength(59)
+    expect(current.pendingWheelResult).toBeNull()
+
+    cleanup()
+    render(<App />)
+    expect(screen.getByRole('progressbar', { name: 'Progresso da rodada: 1 de 5' })).toBeTruthy()
   })
 
   it('reveals answers, awards multiple teams, and shows the team result', () => {

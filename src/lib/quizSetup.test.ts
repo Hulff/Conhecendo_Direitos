@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Question } from '@/data/questions'
-import { summarizeRound } from './quizSetup'
+import { summarizeRound, summarizeWheelRound } from './quizSetup'
 
 const fixtureQuestions: Question[] = [
   { id: 'c1', area: 'consumidor', level: 'facil', points: 1, text: 'Pergunta fixture 1', options: ['A', 'B', 'C'], answer: 'A', basis: 'Base fixture 1' },
@@ -24,5 +24,10 @@ describe('summarizeRound', () => {
 
   it('reports an empty state when no questions are available', () => {
     expect(summarizeRound([], 'todas', 'curta', 3)).toEqual({ questionCount: 0, maxPoints: 0 })
+  })
+
+  it('calculates the possible score range for roulette rounds', () => {
+    expect(summarizeWheelRound(fixtureQuestions, 'todas', 2)).toEqual({ questionCount: 2, minPoints: 2, maxPoints: 5 })
+    expect(summarizeWheelRound(fixtureQuestions, 'todas', null)).toEqual({ questionCount: 4, minPoints: 7, maxPoints: 7 })
   })
 })
