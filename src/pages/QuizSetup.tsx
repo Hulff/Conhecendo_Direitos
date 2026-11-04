@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { CircleAlert } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -86,7 +87,7 @@ export default function QuizSetup() {
     <section className="quiz-setup-page" aria-labelledby="quiz-setup-title">
       <Card className="quiz-setup-card">
         <CardHeader>
-          <CardTitle className="quiz-setup-title" id="quiz-setup-title">Configurar quiz</CardTitle>
+          <CardTitle as="h1" className="quiz-setup-title" id="quiz-setup-title">Configurar quiz</CardTitle>
           <CardDescription>Escolha o conteúdo e o formato da rodada.</CardDescription>
         </CardHeader>
         <CardContent className="quiz-setup-content">
@@ -161,7 +162,10 @@ export default function QuizSetup() {
               <Badge>Pontuação máxima: {summary.maxPoints} {summary.maxPoints === 1 ? 'ponto' : 'pontos'}</Badge>
             </div>
           </div>
-          {error && <p className="quiz-setup-error" role="alert">{error}</p>}
+          {summary.questionCount === 0 && (
+            <p className="quiz-setup-empty" role="status">Não há perguntas disponíveis para esta seleção. Escolha outra área ou formato.</p>
+          )}
+          {error && <p className="quiz-setup-error" role="alert"><CircleAlert aria-hidden="true" />{error}</p>}
           <Button type="button" size="lg" className="quiz-start-button" onClick={startQuiz} disabled={summary.questionCount === 0}>
             Começar
           </Button>

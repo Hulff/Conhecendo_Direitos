@@ -32,6 +32,7 @@ export default function Stand() {
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null)
   const [revealed, setRevealed] = useState(false)
   const [participants, setParticipants] = useState(readParticipantCount)
+  const [drawError, setDrawError] = useState('')
 
   function chooseCard(nextSelection: StandDeck) {
     const result = drawStandCard({
@@ -43,6 +44,7 @@ export default function Stand() {
     setSelection(nextSelection)
     setUsedIds(result.usedIds)
     setActiveCard(result.card)
+    setDrawError(result.card ? '' : 'Não há cartas disponíveis nesta área.')
     setSelectedAnswer(null)
     setRevealed(false)
   }
@@ -106,6 +108,7 @@ export default function Stand() {
               Surpresa
             </Button>
           </div>
+          {drawError && <p className="stand-empty-state" role="status">{drawError}</p>}
         </div>
       ) : (
         <div className="stand-round">
@@ -124,7 +127,7 @@ export default function Stand() {
           </Card>
           {!revealed ? (
             <>
-              <div className="stand-answer-buttons" aria-label="Sua resposta">
+              <div className="stand-answer-buttons" role="group" aria-label="Sua resposta">
                 <Button type="button" size="lg" onClick={() => reveal(true)}>SIM</Button>
                 <Button type="button" size="lg" variant="secondary" onClick={() => reveal(false)}>NÃO</Button>
               </div>

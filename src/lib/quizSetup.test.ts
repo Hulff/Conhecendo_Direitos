@@ -21,4 +21,8 @@ describe('summarizeRound', () => {
   it('counts every matching question and point in a full round', () => {
     expect(summarizeRound(fixtureQuestions, 'todas', 'completa', 3)).toEqual({ questionCount: 4, maxPoints: 7 })
   })
+
+  it('reports an empty state when no questions are available', () => {
+    expect(summarizeRound([], 'todas', 'curta', 3)).toEqual({ questionCount: 0, maxPoints: 0 })
+  })
 })

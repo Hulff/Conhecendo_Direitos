@@ -78,7 +78,46 @@ src/
 
 **Aceite:** Lighthouse acessibilidade ≥ 90 nas telas principais; README permite a um leigo editar perguntas.
 
----
+## Fase 8 — Roleta de sorteio (Drawer)
+
+**Prompt:**
+
+Leia AGENTS.md e as Fases 2, 5 e 6 antes de começar. Adicione o formato de rodada “Roleta”, em que cada pergunta é sorteada girando uma roleta dentro de um Drawer.
+
+1. Lógica pura (src/lib/wheel.ts + wheel.test.ts, usando fixtures)
+
+buildWheelSlices(area): retorna as fatias. Para area: "todas", 6 fatias (fácil/média/difícil × trabalho/consumidor); para uma área, 3 fatias (uma por nível). Cada fatia tem level, area, startAngle, endAngle.
+spinWheel({ slices, remaining, seed? }): sorteia somente entre fatias que ainda têm perguntas disponíveis (usa o conjunto de perguntas restantes) e devolve { sliceIndex, level, area, finalRotation }. finalRotation = voltas completas (5 a 8) + o ângulo que alinha o centro da fatia ao ponteiro (topo), com pequeno desvio aleatório dentro da fatia para parecer natural.
+drawQuestion(remaining, level, area): tira uma pergunta do conjunto restante, sem repetir, e devolve o novo conjunto.
+Testes: nunca sorteia fatia esgotada; nunca repete pergunta; o ângulo final cai dentro da fatia sorteada; com tudo esgotado retorna null.
+
+2. Componente WheelDrawer.tsx
+
+Instale o componente com pnpm dlx shadcn@latest add drawer.
+A roleta é um SVG com cores por nível (fácil verde, média ouro, difícil vinho/vermelho, com contraste AA para o texto), rótulos “Trabalho”/”Consumidor” em cada metade, ponteiro fixo no topo e o hub central com a marca.
+Props: open, slices, result (do spinWheel), onFinished(result).
+Sequência: o drawer sobe (open) → a roleta gira com CSS transition em transform: rotate() por ~3,5 s com easing de desaceleração → ao terminar (onTransitionEnd) destaca a fatia sorteada e mostra “Nível MÉDIO · Direito do Consumidor” por ~1 s → chama onFinished → o drawer desce sozinho.
+Não deve ser fechável por arrastar nem por clique fora durante o giro (dismissible={false}); sem botão “pular”, para não quebrar a dinâmica.
+Respeitar prefers-reduced-motion: sem giro; mostra o resultado direto por ~1 s e fecha.
+Acessibilidade: o resultado é anunciado em uma região aria-live="polite"; DrawerTitle e DrawerDescription presentes (exigência do Radix/vaul); foco devolvido ao botão que abriu.
+
+3. Integração
+
+Em QuizSetup.tsx: novo formato “Roleta”, com seletor de nº de perguntas (5, 10, 15 ou “Até esgotar”). O resumo mostra o nº de perguntas e os pontos máximos como faixa (mín–máx), já que o nível é aleatório. O estado persistido (sessionStorage) guarda o conjunto restante e a pergunta atual, para sobreviver a recarregar.
+Em QuizPlay.tsx, no formato Roleta: em vez de “Próxima”, o botão é “Girar a roleta”. Ao tocar: spinWheel → abre o WheelDrawer → no onFinished o drawQuestion define a pergunta, o drawer fecha e a tela mostra a pergunta normalmente (badges, alternativas, “Revelar resposta”, “Quem acertou?”).
+A primeira pergunta também sai da roleta (tela inicial do jogo com o botão “Girar a roleta”). Não há botão “Anterior” nesse formato.
+Fim da rodada: ao atingir o nº escolhido ou esgotar tudo, vai para QuizResult.
+Se um nível/área esgotar, a roleta continua girando só entre as fatias com perguntas; as esgotadas aparecem apagadas (cinza) no desenho.
+
+Não escreva texto de pergunta nos componentes. Registre decisões e pendências em DECISIONS.md.
+
+**Aceite:**
+
+O drawer sobe, a roleta gira, para na fatia sorteada, o drawer desce e a pergunta correspondente aparece, sem repetição durante toda a rodada.
+Recarregar a página no meio da rodada não perde o estado.
+Funciona em 360px e em projetor; com prefers-reduced-motion ativo não há giro.
+Testes de wheel.ts verdes; pnpm lint && pnpm test && pnpm build sem erros.
+
 
 ## Checklist final (verificar antes de encerrar)
 - [ ] Nenhum texto de pergunta/carta fora de `src/data/`.

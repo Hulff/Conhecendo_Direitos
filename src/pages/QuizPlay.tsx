@@ -121,8 +121,8 @@ export default function QuizPlay() {
             <CardContent><p><strong>Fundamento legal:</strong> {question.basis}</p></CardContent>
           </Card>
           {session.scoringEnabled && !isParticipant && (
-            <div className="quiz-team-awards" aria-label="Equipes que acertaram">
-              <h2>Quem acertou?</h2>
+            <div className="quiz-team-awards" role="group" aria-labelledby="quiz-team-awards-title">
+              <h2 id="quiz-team-awards-title">Quem acertou?</h2>
               <div className="quiz-team-chips">
                 {session.teamNames.map((team) => {
                   const awarded = progress.awardedTeams.includes(team)

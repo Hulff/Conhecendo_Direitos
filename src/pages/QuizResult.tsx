@@ -33,7 +33,7 @@ export default function QuizResult() {
     <section className="quiz-result-page" aria-labelledby="quiz-result-title">
       <Card className="quiz-result-card">
         <CardHeader className="quiz-result-header">
-          <CardTitle id="quiz-result-title">Rodada concluída</CardTitle>
+          <CardTitle as="h1" id="quiz-result-title">Rodada concluída</CardTitle>
           <CardDescription>{answeredCount} de {round.length} perguntas respondidas</CardDescription>
         </CardHeader>
         <CardContent className="quiz-result-content">

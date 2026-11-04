@@ -13,7 +13,7 @@ const buttonVariants = cva(
         ghost: 'text-foreground hover:bg-secondary',
         outline: 'border border-border bg-transparent text-foreground hover:bg-secondary',
       },
-      size: { default: '', sm: 'min-h-10 px-3 text-sm', lg: 'min-h-14 px-7 text-lg', icon: 'h-12 w-12 p-0' },
+      size: { default: '', sm: 'min-h-12 px-3 text-sm', lg: 'min-h-14 px-7 text-lg', icon: 'h-12 w-12 p-0' },
     },
     defaultVariants: { variant: 'default', size: 'default' },
   },
