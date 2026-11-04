@@ -118,6 +118,37 @@ Recarregar a página no meio da rodada não perde o estado.
 Funciona em 360px e em projetor; com prefers-reduced-motion ativo não há giro.
 Testes de wheel.ts verdes; pnpm lint && pnpm test && pnpm build sem erros.
 
+## Fase 9 — Créditos de autoria e desenvolvedor
+
+**Prompt:**
+> Leia `AGENTS.md` antes de começar. Adicione os créditos do app sem escrever nomes diretamente nos componentes.
+>
+> **1. Configuração (`src/lib/config.ts`)**
+> ```ts
+> export const APP_NAME = "Conhecendo Direitos";
+> export const AUTHOR = "pipip poppo";
+> export const DEVELOPER = "Pedro Hugo Ursulino Fernandes";
+> ```
+>
+> **2. Componente `Credits.tsx`**
+> - Renderiza duas linhas discretas: "Feito por {AUTHOR}" e "Desenvolvido por {DEVELOPER}".
+> - Texto pequeno, cor `text-white/60`, nomes em ouro (`text-primary`) e semibold. Deve cumprir contraste AA, crescer junto com o modo projeção e não usar `position: fixed`.
+> - Inclua `<Credits />` no fim do `Layout.tsx`, para aparecer em todas as telas.
+> - Na tela de jogo (`QuizPlay`) e no `Stand`, o crédito não pode causar rolagem em 360px. Se isso acontecer, mostre apenas na `Home` e no `QuizResult`.
+>
+> **3. Metadados**
+> - No `index.html`: `<meta name="author" content="Pedro Hugo Ursulino Fernandes" />`, e o `<title>` com a marca do app.
+> - No `README.md`, adicione uma seção "Créditos" com os dois nomes.
+> - Opcional: botão "Créditos" na `Home` abrindo um `Dialog` do shadcn com autoria, desenvolvimento e o aviso de que os itens `corrigido: true` aguardam revisão jurídica. O `Dialog` deve ter `DialogTitle` e `DialogDescription`.
+>
+> Registre em `DECISIONS.md` onde os créditos aparecem.
+
+**Aceite:**
+
+- Os dois créditos aparecem na Home e no resultado do quiz, e não geram rolagem em 360px nas telas de jogo.
+- Nenhum nome escrito fora de `src/lib/config.ts` (exceto `index.html` e `README.md`).
+- `pnpm lint && pnpm test && pnpm build` sem erros.
+
 
 ## Checklist final (verificar antes de encerrar)
 - [ ] Nenhum texto de pergunta/carta fora de `src/data/`.
@@ -126,3 +157,4 @@ Testes de wheel.ts verdes; pnpm lint && pnpm test && pnpm build sem erros.
 - [ ] `pnpm lint && pnpm test && pnpm build` sem erros.
 - [ ] Pendência humana registrada: revisão jurídica dos itens `corrigido: true`.
 - [ ] Formato Roleta: drawer sobe, gira, desce e mostra a pergunta./
+- [ ] Créditos (autoria e desenvolvedor) visíveis e vindos de `config.ts`.
