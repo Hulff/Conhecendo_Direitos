@@ -2,6 +2,7 @@ import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import Home from '@/pages/Home'
 import ModePlaceholder from '@/pages/ModePlaceholder'
+import Stand from '@/pages/Stand'
 
 export default function App() {
   return (
@@ -9,7 +10,7 @@ export default function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/stand" element={<ModePlaceholder title="Modo Stand" description="Detetive dos Direitos" />} />
+          <Route path="/stand" element={<Stand />} />
           <Route path="/quiz" element={<ModePlaceholder title="Configurar quiz" description="Escolha a rodada de perguntas." />} />
           <Route path="/quiz/jogar" element={<ModePlaceholder title="Quiz" description="A rodada de perguntas aparecerá aqui." />} />
           <Route path="/quiz/resultado" element={<ModePlaceholder title="Resultado" description="O placar final aparecerá aqui." />} />

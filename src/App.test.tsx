@@ -19,7 +19,7 @@ describe('application routes and home', () => {
     expect(screen.getByRole('heading', { name: 'Detetive dos Direitos (Stand)' })).toBeTruthy()
     expect(screen.getByRole('heading', { name: 'Quiz de Perguntas' })).toBeTruthy()
     fireEvent.click(screen.getByRole('link', { name: 'Abrir modo Stand' }))
-    expect(screen.getByRole('heading', { name: 'Modo Stand' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Escolha uma área' })).toBeTruthy()
   })
 
   it('supports direct navigation to each quiz route', () => {
@@ -35,6 +35,19 @@ describe('application routes and home', () => {
       expect(screen.getByRole('heading', { name: title })).toBeTruthy()
       view.unmount()
     }
+  })
+
+  it('completes a stand card, saves the participant count, and returns to area selection', () => {
+    window.location.hash = '#/stand'
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: /Direito do Consumidor/ }))
+    expect(screen.getByText('Direito violado?')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'SIM' }))
+    expect(screen.getByText(/Aprenda:/)).toBeTruthy()
+    expect(screen.getByText('1', { exact: true })).toBeTruthy()
+    expect(window.localStorage.getItem('conhecendo-direitos:participantes-atendidos')).toBe('1')
+    fireEvent.click(screen.getByRole('button', { name: 'Próximo participante' }))
+    expect(screen.getByRole('heading', { name: 'Escolha uma área' })).toBeTruthy()
   })
 
   it('toggles and persists projection mode', () => {
