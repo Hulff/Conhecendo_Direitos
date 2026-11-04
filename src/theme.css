@@ -1,0 +1,79 @@
+/* ============================================================
+   TEMA "Conhecendo Direitos" — extraído da logo (public/logo-fundo.png)
+   Cores medidas por amostragem de pixels da imagem.
+   Compatível com shadcn/ui (variáveis HSL "H S% L%").
+   Importe este arquivo em index.css DEPOIS das diretivas @tailwind
+   (ou @import "tailwindcss") e use-o no lugar do tema escuro padrão.
+   ============================================================ */
+
+:root {
+  /* paleta bruta (hex) */
+  --brand-wine-top: #650705;     /* topo do degradê */
+  --brand-wine-mid: #530503;     /* meio */
+  --brand-wine-bottom: #410403;  /* base */
+  --brand-wine-deep: #310303;    /* sombra sob o título */
+  --brand-gold: #feb800;         /* "CONHECENDO" */
+  --brand-white: #ffffff;        /* "DIREITOS" */
+  --brand-scale: #782d05;        /* balança (marrom-alaranjado) */
+
+  /* tokens shadcn */
+  --background: 1 93% 17%;
+  --foreground: 0 0% 100%;
+
+  --card: 2 95% 15%;
+  --card-foreground: 0 0% 100%;
+  --popover: 2 95% 15%;
+  --popover-foreground: 0 0% 100%;
+
+  --primary: 43 100% 50%;              /* ouro */
+  --primary-foreground: 0 88% 10%;     /* vinho profundo sobre ouro */
+
+  --secondary: 2 94% 18%;
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 2 94% 18%;
+  --muted-foreground: 19 30% 70%;
+
+  --accent: 21 92% 25%;                /* cor da balança */
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 21 92% 25%;
+  --input: 21 92% 25%;
+  --ring: 43 100% 50%;
+
+  --radius: 1rem;
+
+  /* feedback do jogo (sempre acompanhado de ícone + texto) */
+  --correct: 142 71% 45%;
+  --wrong: 0 84% 60%;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  color: hsl(var(--foreground));
+  /* degradê vertical da logo: #650705 -> #530503 -> #410403 */
+  background: linear-gradient(
+    180deg,
+    var(--brand-wine-top) 0%,
+    var(--brand-wine-mid) 50%,
+    var(--brand-wine-bottom) 100%
+  ) fixed;
+}
+
+/* Títulos da marca: peso ExtraBold/Black, caixa alta, tracking justo */
+.brand-title {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+}
+.brand-title .gold  { color: var(--brand-gold); }
+.brand-title .white { color: var(--brand-white); text-shadow: 0 10px 30px var(--brand-wine-deep); }

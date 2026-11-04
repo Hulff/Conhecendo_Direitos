@@ -1,0 +1,54 @@
+@import './theme.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background font-sans text-foreground antialiased; }
+}
+
+.app-shell {
+  position: relative;
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  overflow: hidden;
+  padding: 2rem 1.25rem;
+}
+.app-content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 56rem);
+  margin-inline: auto;
+}
+.justice-scale {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(40vw, 27rem);
+  color: var(--brand-scale);
+  opacity: 0.3;
+  transform: translate(-50%, -50%);
+}
+.home-intro { display: grid; justify-items: center; gap: 2.25rem; text-align: center; }
+.brand-title {
+  display: grid;
+  margin: 0;
+  font-size: clamp(2.35rem, 10vw, 6.75rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+}
+.brand-title .gold { color: var(--brand-gold); }
+.brand-title .white { color: var(--brand-white); text-shadow: 0 8px 24px var(--brand-wine-deep); }
+.brand-title-compact { font-size: clamp(2rem, 6vw, 3rem); }
+.intro-card { width: min(100%, 34rem); }
+.intro-card-content { padding: 1.5rem; color: hsl(var(--muted-foreground)); font-size: 1.125rem; }
+.intro-card-content p { margin: 0; }
+body { font-family: Montserrat, Inter, ui-sans-serif, system-ui, sans-serif; }
+@media (min-width: 768px) {
+  .app-shell { padding: 3rem; }
+  .home-intro { gap: 3rem; }
+}
