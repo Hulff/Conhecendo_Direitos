@@ -2,6 +2,7 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
+import { AUTHOR, DEVELOPER } from '@/lib/config'
 
 const projectionKey = 'conhecendo-direitos:modo-projecao'
 
@@ -20,6 +21,10 @@ describe('application routes and home', () => {
     expect(screen.getByRole('heading', { name: 'Conhecendo Direitos' })).toBeTruthy()
     expect(screen.getByRole('heading', { name: 'Detetive dos Direitos (Stand)' })).toBeTruthy()
     expect(screen.getByRole('heading', { name: 'Quiz de Perguntas' })).toBeTruthy()
+    const credits = screen.getByRole('contentinfo', { name: 'Créditos' })
+    expect(credits.textContent).toContain(AUTHOR)
+    expect(credits.textContent).toContain(DEVELOPER)
+    expect(document.title).toBe('Conhecendo Direitos')
     fireEvent.click(screen.getByRole('link', { name: 'Abrir modo Stand' }))
     expect(screen.getByRole('heading', { name: 'Escolha uma área' })).toBeTruthy()
   })
@@ -137,6 +142,7 @@ describe('application routes and home', () => {
     }
     fireEvent.click(screen.getByRole('button', { name: 'Ver resultado' }))
     expect(screen.getByRole('heading', { name: 'Rodada concluída' })).toBeTruthy()
+    expect(screen.getByRole('contentinfo', { name: 'Créditos' }).textContent).toContain(DEVELOPER)
     expect(screen.getByText('Equipe 1')).toBeTruthy()
     expect(screen.getByText('Equipe 2')).toBeTruthy()
   })

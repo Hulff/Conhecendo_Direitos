@@ -48,3 +48,8 @@ python3 -m http.server 4173 --directory dist --bind 0.0.0.0
 Descubra o IP local do computador e abra `http://IP-DO-COMPUTADOR:4173` no dispositivo do stand. Também é possível usar `pnpm exec vite preview --host 0.0.0.0` para uma prévia do build.
 
 O jogo não usa backend, chamadas de rede ou ranking online. A rodada do quiz fica em `sessionStorage`; o contador do Stand fica em `localStorage` no dispositivo atual.
+
+## Créditos
+
+- Feito por **pipip poppo**.
+- Desenvolvido por **Pedro Hugo Ursulino Fernandes**.

@@ -1,5 +1,9 @@
 import type { ReactNode } from 'react'
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import type { SVGProps } from 'react'
+import Credits from '@/components/Credits'
+import { APP_NAME } from '@/lib/config'
 
 function JusticeScale({ color = "#782D05", ...props }: SVGProps<SVGSVGElement> & { color?: string }) {
   return (
@@ -45,10 +49,20 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
+  const { pathname } = useLocation()
+  const showCredits = pathname === '/' || pathname === '/quiz/resultado'
+
+  useEffect(() => {
+    document.title = APP_NAME
+  }, [])
+
   return (
     <div className="app-shell">
       <JusticeScale />
-      <main className="app-content">{children}</main>
+      <main className="app-content">
+        {children}
+        {showCredits && <Credits />}
+      </main>
     </div>
   )
 }
