@@ -8,6 +8,14 @@
 // (marcados com `corrigido: true`) devem passar por revisão jurídica:
 //   trabalho: 14, 15, 17, 18, 20, 21, 23, 24, 26, 27, 29, 30
 //   consumidor: 26, 29
+//
+// REVISÃO DE 05/11/2026: todos os gabaritos foram conferidos com a legislação
+// vigente. Alterações desta revisão:
+//   - t01 reescrita por causa da EC 141/2026 (fim da escala 6x1; jornada de
+//     44h -> 42h cerca de 60 dias após 16/10/2026 -> 40h 12 meses depois).
+//   - t08: base legal cita os dois dias de repouso da EC 141/2026.
+//   - c04, t14, c30, t23, t26, c15: fonte e/ou fundamento aprimorados
+//     (gabaritos mantidos).
 // ============================================================
 
 export type Area = "consumidor" | "trabalho";
@@ -42,6 +50,8 @@ const CF = `${P}/constituicao/constituicao.htm`;
 const FGTS = `${P}/leis/l8036consol.htm`;
 const STJ_SUMULAS = "https://www.stj.jus.br/docs_internet/VerbetesSTJ_asc.pdf";
 const TST_SUMULAS = "https://consultaunificada2.tst.jus.br/";
+const SENADO_EC141 =
+    "https://www12.senado.leg.br/noticias/materias/2026/10/16/congresso-promulga-o-fim-da-escala-6x1-e-aposentadoria-de-agentes-de-saude";
 
 const s = (label: string, url: string): Source => ({ label, url });
 
@@ -50,7 +60,7 @@ export const SOURCES: Record<string, Source> = {
     c01: s("Lei 8.078/1990 (CDC)", CDC),
     c02: s("CDC, art. 49", `${CDC}#art49`),
     c03: s("CDC, art. 2º", `${CDC}#art2`),
-    c04: s("Procons: reclamações e fiscalização (Gov.br)", "https://www.gov.br/anatel/pt-br/consumidor/quer-reclamar/anatel-procon-ou-juizados-especiais"),
+    c04: s("Decreto 2.181/1997 (Sistema Nacional de Defesa do Consumidor)", `${P}/decreto/d2181.htm`),
     c05: s("CDC, art. 39, I", `${CDC}#art39`),
     c06: s("CDC, art. 26, II", `${CDC}#art26`),
     c07: s("CDC, art. 37", `${CDC}#art37`),
@@ -76,23 +86,23 @@ export const SOURCES: Record<string, Source> = {
     c27: s("Súmula 302 do STJ", STJ_SUMULAS),
     c28: s("CDC, art. 17", `${CDC}#art17`),
     c29: s("CDC, art. 18, §3º", `${CDC}#art18`),
-    c30: s("Súmula 130 do STJ", STJ_SUMULAS),
+    c30: s("Súmula 130 do STJ; CDC, art. 25", STJ_SUMULAS),
 
     // ---------------- TRABALHO ----------------
-    t01: s("CF/1988, art. 7º, XIII", `${CF}#art7`),
+    t01: s("CF/1988, art. 7º, XIII (redação da EC 141/2026) — Senado Notícias", SENADO_EC141),
     t02: s("CLT, art. 130", `${CLT}#art130`),
     t03: s("Lei 4.090/1962 (13º salário)", `${P}/leis/l4090.htm`),
     t04: s("CF/1988, art. 7º, XXXIII", `${CF}#art7`),
     t05: s("CLT, art. 29", `${CLT}#art29`),
     t06: s("Lei 8.036/1990, art. 15", `${FGTS}#art15`),
     t07: s("CF/1988, art. 7º, XVIII", `${CF}#art7`),
-    t08: s("CF/1988, art. 7º, XV", `${CF}#art7`),
+    t08: s("CF/1988, art. 7º, XV (com a EC 141/2026) — Senado Notícias", SENADO_EC141),
     t09: s("CF/1988, art. 7º, XVI", `${CF}#art7`),
     t10: s("CLT, art. 71", `${CLT}#art71`),
     t11: s("Lei 12.506/2011 (aviso prévio proporcional)", `${P}/_ato2011-2014/2011/lei/l12506.htm`),
     t12: s("Lei 8.036/1990, art. 18, §1º", `${FGTS}#art18`),
     t13: s("CF/1988, art. 7º, XXIX", `${CF}#art7`),
-    t14: s("Súmulas 172 e 376 do TST", TST_SUMULAS),
+    t14: s("Súmulas 45, 63, 151, 172 e 376 do TST", TST_SUMULAS),
     t15: s("CLT, art. 73", `${CLT}#art73`),
     t16: s("CLT, art. 192", `${CLT}#art192`),
     t17: s("ADCT, art. 10, II, b (CF/1988)", CF),
@@ -138,7 +148,7 @@ export const questions: Question[] = [
     q("c03", "consumidor", "facil", "Segundo o CDC, consumidor é:",
         ["somente quem compra produtos para revender", "toda pessoa física ou jurídica que adquire ou utiliza produto ou serviço como destinatário final", "apenas pessoa física maior de 18 anos"], "B", "Art. 2º do CDC."),
     q("c04", "consumidor", "facil", "Qual órgão é conhecido por receber reclamações de consumidores e fiscalizar práticas abusivas?",
-        ["Junta Comercial", "Procon", "Receita Federal"], "B", "O Procon integra o Sistema Nacional de Defesa do Consumidor."),
+        ["Junta Comercial", "Procon", "Receita Federal"], "B", "O Procon integra o Sistema Nacional de Defesa do Consumidor (CDC, arts. 105 e 106; Decreto 2.181/1997)."),
     q("c05", "consumidor", "facil", "Condicionar a venda de um produto à compra de outro (venda casada) é:",
         ["prática abusiva, proibida pelo CDC", "permitida se informada no balcão", "permitida apenas em promoções"], "A", "Art. 39, I, do CDC."),
     q("c06", "consumidor", "facil", "Qual é o prazo para reclamar de vício aparente ou de fácil constatação em produto durável?",
@@ -161,7 +171,7 @@ export const questions: Question[] = [
     q("c14", "consumidor", "medio", "As cláusulas contratuais abusivas previstas no CDC são:",
         ["anuláveis apenas se o consumidor reclamar em 30 dias", "válidas se o consumidor assinou o contrato", "nulas de pleno direito"], "C", "Art. 51 do CDC."),
     q("c15", "consumidor", "medio", "A cobrança indevida de quantia já paga pelo consumidor gera, em regra, direito à restituição:",
-        ["em dobro, salvo engano justificável", "simples, sem correção", "em triplo, em todos os casos"], "A", "Art. 42, parágrafo único, do CDC."),
+        ["em dobro, salvo engano justificável", "simples, sem correção", "em triplo, em todos os casos"], "A", "Art. 42, parágrafo único, do CDC. O STJ (EAREsp 676.608) fixou que a devolução em dobro independe de má-fé do fornecedor."),
     q("c16", "consumidor", "medio", "Em caso de vício oculto, o prazo decadencial para reclamar começa a contar:",
         ["da data de fabricação do produto", "do momento em que o defeito ficar evidenciado", "da data do vencimento da garantia"], "B", "Art. 26, §3º, do CDC."),
     q("c17", "consumidor", "medio", "Apresentado vício de qualidade no produto, quanto tempo o fornecedor tem para saná-lo antes de o consumidor exigir substituição, restituição ou abatimento?",
@@ -192,12 +202,12 @@ export const questions: Question[] = [
     q("c29", "consumidor", "dificil", "Em que situação o consumidor pode exigir de imediato substituição, restituição ou abatimento, sem aguardar os 30 dias do art. 18, §1º?",
         ["Somente se o produto tiver mais de 1 ano de uso", "Quando a substituição das partes comprometer a qualidade, diminuir o valor ou se tratar de produto essencial", "Nunca; o prazo de 30 dias é sempre obrigatório"], "B", "Art. 18, §3º, do CDC.", true),
     q("c30", "consumidor", "dificil", "Segundo a Súmula 130 do STJ, a empresa responde perante o cliente por dano ou furto de veículo ocorrido em seu estacionamento?",
-        ["Não, pois o estacionamento é uma cortesia", "Sim, responde pela reparação do dano", "Não, se houver placa avisando que a empresa não se responsabiliza"], "B", "Súmula 130 do STJ; placas de isenção não afastam a responsabilidade."),
+        ["Não, pois o estacionamento é uma cortesia", "Sim, responde pela reparação do dano", "Não, se houver placa avisando que a empresa não se responsabiliza"], "B", "Súmula 130 do STJ. Placas de isenção não afastam a responsabilidade (entendimento consolidado do STJ; CDC, art. 25)."),
 
     // ---------------- DIREITO DO TRABALHO ----------------
     // Fácil
-    q("t01", "trabalho", "facil", "Qual a duração normal máxima do trabalho prevista na Constituição Federal?",
-        ["6 horas diárias e 30 semanais", "8 horas diárias e 44 semanais", "10 horas diárias e 48 semanais"], "B", "Art. 7º, XIII, da CF."),
+    q("t01", "trabalho", "facil", "Com a Emenda Constitucional 141/2026 (fim da escala 6x1), qual será a duração semanal máxima do trabalho prevista na Constituição Federal após concluída a transição?",
+        ["36 horas semanais", "40 horas semanais, sem redução de salário", "44 horas semanais"], "B", "EC 141/2026, promulgada em 16/10/2026: a jornada máxima cai de 44 para 42 horas cerca de 60 dias após a promulgação e para 40 horas 12 meses depois, com dois dias de repouso semanal remunerado e sem redução salarial. A duração diária máxima continua sendo de 8 horas. Até a conclusão da transição, o limite em vigor é o da etapa correspondente."),
     q("t02", "trabalho", "facil", "Após cada 12 meses de vigência do contrato, quantos dias de férias tem o empregado (sem faltas injustificadas relevantes)?",
         ["30 dias", "15 dias", "20 dias"], "A", "Art. 130 da CLT."),
     q("t03", "trabalho", "facil", "O 13º salário também é conhecido como:",
@@ -211,7 +221,7 @@ export const questions: Question[] = [
     q("t07", "trabalho", "facil", "A licença-maternidade prevista na Constituição Federal tem duração de:",
         ["120 dias", "60 dias", "90 dias"], "A", "Art. 7º, XVIII, da CF (a Empresa Cidadã pode prorrogar por 60 dias)."),
     q("t08", "trabalho", "facil", "O descanso semanal remunerado deve ser concedido, preferencialmente, aos:",
-        ["sábados", "domingos", "feriados"], "B", "Art. 7º, XV, da CF."),
+        ["sábados", "domingos", "feriados"], "B", "Art. 7º, XV, da CF. Com a EC 141/2026, o trabalhador tem direito a dois dias de repouso semanal remunerado, sendo um deles, preferencialmente, o domingo."),
     q("t09", "trabalho", "facil", "O adicional mínimo constitucional para as horas extras é de:",
         ["10%", "20%", "50% sobre a hora normal"], "C", "Art. 7º, XVI, da CF."),
     q("t10", "trabalho", "facil", "Em jornada superior a 6 horas, o intervalo mínimo para repouso ou alimentação é de:",
@@ -224,7 +234,7 @@ export const questions: Question[] = [
     q("t13", "trabalho", "medio", "Qual o prazo prescricional para ajuizar ação trabalhista após a extinção do contrato de trabalho?",
         ["2 anos, limitada a cobrança aos últimos 5 anos", "5 anos, sem limitação", "1 ano"], "A", "Art. 7º, XXIX, da CF."),
     q("t14", "trabalho", "medio", "Horas extras habituais, em regra, refletem (integram o cálculo) em:",
-        ["férias, 13º salário, FGTS e descanso semanal remunerado", "apenas no salário do mês em que foram feitas", "nenhuma verba, por terem natureza indenizatória"], "A", "Súmulas 172 e 376 do TST.", true),
+        ["férias, 13º salário, FGTS e descanso semanal remunerado", "apenas no salário do mês em que foram feitas", "nenhuma verba, por terem natureza indenizatória"], "A", "Súmulas 172 (DSR), 45 (13º salário), 63 (FGTS) e 151 (férias) do TST; a Súmula 376 trata do limite de horas extras computáveis.", true),
     q("t15", "trabalho", "medio", "O adicional noturno do trabalhador urbano (22h às 5h) é de, no mínimo:",
         ["50%", "20% sobre a hora diurna", "10%"], "B", "Art. 73 da CLT.", true),
     q("t16", "trabalho", "medio", "Os percentuais do adicional de insalubridade nos graus mínimo, médio e máximo são, respectivamente:",
@@ -243,13 +253,13 @@ export const questions: Question[] = [
     q("t22", "trabalho", "dificil", "Pelo art. 71, §4º, da CLT, o intervalo intrajornada não concedido ou reduzido gera pagamento:",
         ["apenas do período suprimido, com acréscimo de 50% e natureza indenizatória", "da hora integral com acréscimo de 100% e natureza salarial", "de multa fixa de 1 salário mínimo"], "A", "Art. 71, §4º, da CLT, com redação da Lei 13.467/2017."),
     q("t23", "trabalho", "dificil", "Pela Súmula 331 do TST, na terceirização lícita, se a empresa prestadora não pagar as verbas trabalhistas, a tomadora de serviços responde:",
-        ["subsidiariamente, desde que tenha participado da relação processual e conste do título executivo", "solidariamente, sem qualquer condição", "de nenhuma forma, pois o vínculo é só com a prestadora"], "A", "Súmula 331, IV, do TST.", true),
+        ["subsidiariamente, desde que tenha participado da relação processual e conste do título executivo", "solidariamente, sem qualquer condição", "de nenhuma forma, pois o vínculo é só com a prestadora"], "A", "Súmula 331, IV, do TST. Observação: o STF (ADPF 324 e Tema 725) admitiu a terceirização também da atividade-fim, e a responsabilidade da Administração Pública segue a ADC 16.", true),
     q("t24", "trabalho", "dificil", "A jornada de 12 horas de trabalho por 36 de descanso (12x36) pode ser estabelecida, segundo o art. 59-A da CLT, por:",
         ["apenas por sentença normativa", "acordo individual escrito, convenção coletiva ou acordo coletivo", "exclusivamente por lei federal"], "B", "Art. 59-A da CLT.", true),
     q("t25", "trabalho", "dificil", "Pela Súmula 443 do TST, a dispensa de empregado portador do vírus HIV ou de outra doença grave que suscite estigma ou preconceito é:",
         ["presumidamente discriminatória, com direito à reintegração", "válida, pois o empregador pode dispensar sem justa causa", "válida, desde que paga a multa de 40% do FGTS"], "A", "Súmula 443 do TST."),
     q("t26", "trabalho", "dificil", "Pelo art. 461 da CLT (pós-reforma), na equiparação salarial a diferença de tempo na função entre paradigma e equiparando não pode ser superior a:",
-        ["2 anos", "4 anos", "1 ano"], "A", "Art. 461, §1º: até 2 anos na função (e até 4 anos de tempo de serviço para o mesmo empregador).", true),
+        ["2 anos", "4 anos", "1 ano"], "A", "Art. 461, §1º: até 2 anos na função. O limite de 4 anos refere-se ao tempo de serviço para o mesmo empregador (opção B é distrator).", true),
     q("t27", "trabalho", "dificil", "No contrato de trabalho intermitente, o empregado convocado tem quanto tempo para responder ao chamado, presumindo-se, no silêncio, a recusa?",
         ["3 dias corridos", "1 dia útil", "5 dias úteis"], "B", "Art. 452-A, §2º, da CLT (3 dias corridos é a antecedência mínima da convocação).", true),
     q("t28", "trabalho", "dificil", "Pelo art. 790, §3º, da CLT, o juiz pode conceder gratuidade de justiça a quem perceba salário igual ou inferior a:",

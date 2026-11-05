@@ -191,6 +191,7 @@ html.projection-mode { font-size: 125%; }
 .quiz-answer-list { display: grid; gap: 0.75rem; }
 .quiz-answer-option { display: flex; width: 100%; min-height: 4rem; justify-content: flex-start; gap: 0.75rem; padding: 0.75rem 1rem; text-align: left; white-space: normal; }
 .quiz-answer-option:disabled { opacity: 1; }
+.quiz-answer-option[aria-pressed="true"]:not(.quiz-answer-correct):not(.quiz-answer-incorrect) { border-color: hsl(var(--primary)); background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
 .quiz-answer-letter { display: inline-grid; width: 2rem; height: 2rem; flex: 0 0 auto; place-items: center; border: 1px solid currentColor; border-radius: 999px; font-weight: 800; }
 .quiz-answer-text { flex: 1; }
 .quiz-answer-option svg { width: 1.5rem; height: 1.5rem; flex: 0 0 auto; }
